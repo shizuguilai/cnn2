@@ -10,12 +10,12 @@ import torchvision.transforms
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 #transform picture to appropriate form
-batch_size = 270
+batch_size = 421
 transfrom = torchvision.transforms.Compose([torchvision.transforms.ToTensor(), torchvision.transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
 train_dataset = torchvision.datasets.ImageFolder('./split_picture/train', transform=transfrom)
 train_loader = torch.utils.data.DataLoader(dataset = train_dataset, batch_size = batch_size)
 
-test_dataset = torchvision.datasets.ImageFolder(' ./split_picture/test', transform=transfrom)
+test_dataset = torchvision.datasets.ImageFolder('./split_picture/test', transform=transfrom)
 test_loader = torch.utils.data.DataLoader(dataset = test_dataset, batch_size = batch_size)
 
 """
@@ -70,7 +70,7 @@ for epoch in range(num_epochs):
         loss = criterion(preds, labels)
         loss.backward()
         optimizer.step()
-        predicted = torch.argmax(preds, 1)
+        predicted = torch.argmax(preds, dim = 1) #Returns the indices of the maximum values of a tensor across a dimension.
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
         accuracy = correct/total		
@@ -82,7 +82,7 @@ for epoch in range(num_epochs):
     for images, labels in test_loader: #test data
         preds = model(images)
         loss = criterion(preds, labels)	
-        predicted = torch.argmax(preds, 1)
+        predicted = torch.argmax(preds, dim = 1)
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
         accuracy = correct/total
@@ -95,7 +95,7 @@ correct = 0
 total = 0
 for images, labels in test_loader:
 	preds = model(images)
-	predicted = torch.argmax(preds, 1)
+	predicted = torch.argmax(preds, dim = 1)
 	total += labels.size(0)
 	correct += (predicted == labels).sum().item()
 
